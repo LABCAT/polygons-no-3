@@ -70,6 +70,8 @@ const P5SketchWithAudio = () => {
 
         p.numberOfSides = 6;
 
+        p.horizontalAlignment = 'left';
+
         p.setup = () => {
             p.canvas = p.createCanvas(p.canvasWidth, p.canvasHeight);
             p.colorMode(p.HSB);
@@ -78,14 +80,17 @@ const P5SketchWithAudio = () => {
             p.background(255);
             p.stroke(0);
             p.strokeWeight(4);
-
+            p.horizontalAlignment = Math.random() > 0.5 ? 'left' : 'right';
+            
+            
+            const darkMode = Math.random() > 0.5;
             let baseHue = p.random(0, 20);
             p.possibleSides.forEach(element => {
                 p.colourSets[element] = TetradicColourCalculator(
                     p,
                     baseHue,
-                    p.random(75, 100),
-                    p.random(75, 100),
+                    darkMode ? p.random(50, 75) : p.random(75, 100),
+                    darkMode ? p.random(50, 75) : p.random(75, 100),
                 );
                 baseHue = baseHue + 20;
             });
@@ -113,8 +118,12 @@ const P5SketchWithAudio = () => {
             p.currentColourSet = p.colourSets[p.numberOfSides];
 
             for (let i = 0; i < numOfShapes; i++) {
-                const x = p.random(0, p.width - (p.width / p.numberOfSides));
-                const y = p.random(0, p.height - (p.height / p.numberOfSides));
+                const x = p.horizontalAlignment === 'left' 
+                    ? p.random(0, p.width - (p.width / p.numberOfSides))
+                    : p.random((p.width / p.numberOfSides), p.width);
+                const y = p.horizontalAlignment === 'left' 
+                    ? p.random(0, p.height - (p.height / p.numberOfSides))
+                    : p.random((p.height / p.numberOfSides), p.height);
                 const size = p.random(p.height / 8, p.height / 16);
                 const set = [];
                 set.push(
